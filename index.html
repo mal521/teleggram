@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>teleggram</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <h1 class="title">send a teleggram!</h1>
+
+    <div class="carton-wrapper">
+      <div class="hallabong-track">
+        <img src="assets/characters/hallabong.png" alt="hallabong" class="hallabong" id="hallabong">
+      </div>
+
+      <div class="egg-carton" id="egg-carton">
+        <div class="egg-slot" data-egg="0">
+          <img src="assets/characters/gyelan.png" alt="egg" class="egg" id="egg-0">
+        </div>
+        <div class="egg-slot" data-egg="1">
+          <img src="assets/characters/gyelan.png" alt="egg" class="egg" id="egg-1">
+        </div>
+        <div class="egg-slot" data-egg="2">
+          <img src="assets/characters/gyelan.png" alt="egg" class="egg" id="egg-2">
+        </div>
+        <div class="egg-slot" data-egg="3">
+          <img src="assets/characters/gyelan.png" alt="egg" class="egg" id="egg-3">
+        </div>
+        <div class="egg-slot" data-egg="4">
+          <img src="assets/characters/gyelan.png" alt="egg" class="egg" id="egg-4">
+        </div>
+        <div class="egg-slot" data-egg="5">
+          <img src="assets/characters/gyelan.png" alt="egg" class="egg" id="egg-5">
+        </div>
+      </div>
+    </div>
+
+    <div class="slider-area">
+      <span class="slider-label slider-label--left">playful</span>
+      <input type="range" min="0" max="100" value="50" class="mood-slider" id="mood-slider">
+      <span class="slider-label slider-label--right">warm</span>
+    </div>
+
+    <div class="affirmation-area" id="affirmation-area">
+      <p class="affirmation-text" id="affirmation-text"></p>
+    </div>
+
+    <button class="share-btn" id="share-btn">share this love letter</button>
+    <div class="toast" id="toast">copied!</div>
+
+    <div class="counter" id="counter">0 love letters sent</div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

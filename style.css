@@ -1,0 +1,298 @@
+/* --- reset & base --- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  background-color: #f5ece0;
+  background-image:
+    radial-gradient(circle, #ddd4c5 0.8px, transparent 0.8px),
+    linear-gradient(to bottom, rgba(210, 195, 170, 0.06) 1px, transparent 1px),
+    linear-gradient(to right, rgba(210, 195, 170, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px, 24px 24px, 24px 24px;
+  background-position: 12px 12px, 0 0, 0 0;
+  color: #5a4a3a;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* warm paper texture — subtle uneven lighting */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(240, 220, 180, 0.3), transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(230, 210, 170, 0.25), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* --- app container --- */
+.app {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* --- title --- */
+.title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: lowercase;
+  color: #7a5c3a;
+}
+
+/* --- carton wrapper (holds hallabong track + carton) --- */
+.carton-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+/* --- hallabong --- */
+.hallabong-track {
+  position: relative;
+  height: 80px;
+  margin-bottom: 0.5rem;
+}
+
+.hallabong {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  transform: translateX(-50%);
+  transition: left 0.4s ease;
+}
+
+/* --- egg carton --- */
+.egg-carton {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  background: linear-gradient(145deg, #d4b896, #c4a882);
+  border: 3px solid #b89a6f;
+  border-radius: 16px;
+  padding: 20px 16px;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    inset 0 2px 4px rgba(255, 255, 255, 0.2);
+}
+
+/* --- egg slots --- */
+.egg-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(ellipse, #c9b08a 0%, #b89a6f 100%);
+  border-radius: 50%;
+  aspect-ratio: 1;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.egg-slot:hover {
+  transform: scale(1.05);
+}
+
+.egg-slot.highlighted {
+  box-shadow: 0 0 0 3px #f5c57a, 0 0 12px rgba(245, 197, 122, 0.4);
+}
+
+.egg-slot.selected {
+  transform: translateY(-12px) scale(1.12);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* --- egg images --- */
+.egg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  animation: wobble 3s ease-in-out infinite;
+}
+
+.egg-slot:nth-child(2) .egg { animation-delay: 0.5s; }
+.egg-slot:nth-child(3) .egg { animation-delay: 1s; }
+.egg-slot:nth-child(4) .egg { animation-delay: 1.5s; }
+.egg-slot:nth-child(5) .egg { animation-delay: 2s; }
+.egg-slot:nth-child(6) .egg { animation-delay: 2.5s; }
+
+@keyframes wobble {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(2deg); }
+  75% { transform: rotate(-2deg); }
+}
+
+/* --- mood slider --- */
+.slider-area {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.slider-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: lowercase;
+  color: #9a8570;
+  white-space: nowrap;
+}
+
+.mood-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f5c57a, #e8a0bf);
+  outline: none;
+}
+
+.mood-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #d4a853;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.mood-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.mood-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #d4a853;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* --- affirmation area --- */
+.affirmation-area {
+  min-height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.affirmation-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #7a5c3a;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.affirmation-text.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- share button --- */
+.share-btn {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: lowercase;
+  color: #7a5c3a;
+  background: #fff;
+  border: 2px solid #d4b896;
+  border-radius: 24px;
+  padding: 8px 20px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, background 0.2s ease;
+}
+
+.share-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.share-btn:hover {
+  background: #f5eee4;
+}
+
+/* --- toast --- */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #7a5c3a;
+  color: #faf5eb;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* --- counter --- */
+.counter {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #b8a590;
+  border: 1.5px dashed #d4c4b0;
+  border-radius: 8px;
+  padding: 6px 14px;
+  margin-top: 0.5rem;
+}
+
+/* --- responsive --- */
+@media (max-width: 480px) {
+  .app {
+    padding: 1.5rem 1rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .hallabong {
+    width: 52px;
+    height: 52px;
+  }
+
+  .egg-carton {
+    gap: 8px;
+    padding: 16px 12px;
+  }
+}
