@@ -1,21 +1,26 @@
 (function () {
-  const affirmations = [
-    "you're literally the main character",
-    "certified good egg",
-    "10/10 would hatch again",
-    "you are so deeply loved",
-    "the world is better with you in it",
-    "i'm really glad you exist",
+  var affirmations = [
+    "pov: me rushing home\nso i can do absolutely nothing, ASAP",
+    "you're literally the main character\nand the plot is *chef's kiss*",
+    "certified good egg\n(that's you, hi)",
+    "the world is better\nbecause you decided to show up today",
+    "you are so deeply loved\nit's honestly kind of ridiculous",
+    "i'm really glad you exist\nlike, cosmically grateful",
   ];
 
-  const slider = document.getElementById("mood-slider");
-  const hallabong = document.getElementById("hallabong");
-  const affirmationText = document.getElementById("affirmation-text");
-  const shareBtn = document.getElementById("share-btn");
-  const toast = document.getElementById("toast");
-  const eggSlots = document.querySelectorAll(".egg-slot");
+  var viewMain = document.getElementById("view-main");
+  var viewAffirmation = document.getElementById("view-affirmation");
+  var slider = document.getElementById("mood-slider");
+  var affirmationText = document.getElementById("affirmation-text");
+  var copyBtn = document.getElementById("copy-url-btn");
+  var pickAnother = document.getElementById("pick-another");
+  var toast = document.getElementById("toast");
+  var eggSlots = document.querySelectorAll(".egg-slot");
+  var eggs = document.querySelectorAll(".egg");
+  var cartonLid = document.getElementById("carton-lid");
 
-  let selectedEgg = null;
+  var selectedEgg = null;
+  var transitioning = false;
 
   // --- map slider value (0-100) to egg index (0-5) ---
   function sliderToEgg(value) {
@@ -27,20 +32,6 @@
     return 5;
   }
 
-  // --- position hallabong over the target egg ---
-  function moveHallabong(eggIndex) {
-    var carton = document.getElementById("egg-carton");
-    var slot = eggSlots[eggIndex];
-    if (!carton || !slot) return;
-
-    var slotRect = slot.getBoundingClientRect();
-    var track = hallabong.parentElement;
-    var trackRect = track.getBoundingClientRect();
-
-    var slotCenterX = slotRect.left + slotRect.width / 2 - trackRect.left;
-    hallabong.style.left = slotCenterX + "px";
-  }
-
   // --- highlight the egg the slider points at ---
   function highlightEgg(eggIndex) {
     eggSlots.forEach(function (slot, i) {
@@ -48,88 +39,113 @@
     });
   }
 
-  // --- update hallabong's face based on slider position ---
-  function updateHallabongFace(value) {
-    if (value <= 33) {
-      hallabong.src = "assets/characters/hallabong-laugh.png";
-    } else if (value >= 66) {
-      hallabong.src = "assets/characters/hallabong-blush.png";
-    } else {
-      hallabong.src = "assets/characters/hallabong.png";
-    }
-  }
-
-  // --- select an egg: pop it, show affirmation, show share ---
-  function selectEgg(eggIndex) {
-    selectedEgg = eggIndex;
-
-    eggSlots.forEach(function (slot, i) {
+  // --- clear all egg states ---
+  function clearEggs() {
+    eggSlots.forEach(function (slot) {
       slot.classList.remove("selected", "highlighted");
-      if (i === eggIndex) slot.classList.add("selected");
     });
-
-    // swap egg image to animation
-    var eggImg = document.getElementById("egg-" + eggIndex);
-    eggImg.src = "assets/animations/egg-" + eggIndex + ".gif";
-
-    // show affirmation text
-    affirmationText.textContent = affirmations[eggIndex];
-    affirmationText.classList.add("visible");
-
-    // show share button
-    shareBtn.classList.add("visible");
-
-    moveHallabong(eggIndex);
   }
 
-  // --- reset selection ---
-  function resetSelection() {
-    selectedEgg = null;
-
-    eggSlots.forEach(function (slot, i) {
-      slot.classList.remove("selected");
-      var eggImg = document.getElementById("egg-" + i);
-      eggImg.src = "assets/characters/gyelan.png";
+  // --- reveal eggs with staggered pop-in ---
+  function revealEggs() {
+    eggs.forEach(function (egg) {
+      egg.classList.add("egg-visible");
     });
+  }
 
-    affirmationText.classList.remove("visible");
-    shareBtn.classList.remove("visible");
+  // --- hide eggs (reset for re-entrance) ---
+  function hideEggs() {
+    eggs.forEach(function (egg) {
+      egg.classList.remove("egg-visible");
+    });
+  }
+
+  // --- select an egg: sparkle it, then transition to affirmation ---
+  function selectEgg(eggIndex) {
+    if (transitioning) return;
+    transitioning = true;
+    selectedEgg = eggIndex;
+    clearEggs();
+    eggSlots[eggIndex].classList.add("selected");
+
+    // after sparkle plays, transition views
+    setTimeout(function () {
+      showAffirmation(eggIndex);
+    }, 800);
+  }
+
+  // --- show the affirmation view (with smooth transition) ---
+  function showAffirmation(eggIndex) {
+    affirmationText.textContent = affirmations[eggIndex];
+
+    // fade out main view
+    viewMain.classList.add("fade-out");
+
+    setTimeout(function () {
+      viewMain.classList.add("hidden");
+      viewMain.classList.remove("fade-out");
+
+      // show + animate in affirmation view
+      viewAffirmation.classList.remove("hidden");
+      viewAffirmation.classList.add("entering");
+      transitioning = false;
+    }, 400);
+  }
+
+  // --- return to main view (smooth) ---
+  function showMain() {
+    transitioning = true;
+    viewAffirmation.classList.add("fade-out");
+    viewAffirmation.classList.remove("entering");
+
+    setTimeout(function () {
+      viewAffirmation.classList.add("hidden");
+      viewAffirmation.classList.remove("fade-out");
+
+      // reset main view state
+      clearEggs();
+      hideEggs();
+      selectedEgg = null;
+      slider.value = 50;
+      cartonLid.classList.remove("open");
+
+      // show main view
+      viewMain.classList.remove("hidden");
+
+      // re-trigger open animation
+      setTimeout(function () {
+        openCarton();
+        highlightEgg(sliderToEgg(50));
+        transitioning = false;
+      }, 100);
+    }, 400);
   }
 
   // --- slider events ---
   slider.addEventListener("input", function () {
+    if (transitioning) return;
     var value = parseInt(this.value);
-    var eggIndex = sliderToEgg(value);
-
-    updateHallabongFace(value);
-    highlightEgg(eggIndex);
-    moveHallabong(eggIndex);
-
-    if (selectedEgg !== null && selectedEgg !== eggIndex) {
-      resetSelection();
-      highlightEgg(eggIndex);
-    }
+    highlightEgg(sliderToEgg(value));
   });
 
   slider.addEventListener("change", function () {
+    if (transitioning) return;
     var value = parseInt(this.value);
-    var eggIndex = sliderToEgg(value);
-    selectEgg(eggIndex);
+    selectEgg(sliderToEgg(value));
   });
 
   // --- egg click to select ---
   eggSlots.forEach(function (slot) {
     slot.addEventListener("click", function () {
+      if (transitioning) return;
       var eggIndex = parseInt(this.dataset.egg);
-      var sliderValue = Math.round((eggIndex / 5) * 100);
-      slider.value = sliderValue;
-      updateHallabongFace(sliderValue);
+      slider.value = Math.round((eggIndex / 5) * 100);
       selectEgg(eggIndex);
     });
   });
 
-  // --- share button ---
-  shareBtn.addEventListener("click", function () {
+  // --- copy URL ---
+  copyBtn.addEventListener("click", function () {
     if (selectedEgg === null) return;
 
     var url = new URL(window.location.href);
@@ -143,6 +159,23 @@
     });
   });
 
+  // --- pick another ---
+  pickAnother.addEventListener("click", function () {
+    if (transitioning) return;
+    showMain();
+  });
+
+  // --- carton open animation on load ---
+  function openCarton() {
+    setTimeout(function () {
+      cartonLid.classList.add("open");
+      // reveal eggs after lid starts opening
+      setTimeout(function () {
+        revealEggs();
+      }, 300);
+    }, 400);
+  }
+
   // --- check URL param on load ---
   function checkUrlParam() {
     var params = new URLSearchParams(window.location.search);
@@ -151,32 +184,23 @@
     if (eggParam !== null) {
       var eggIndex = parseInt(eggParam);
       if (eggIndex >= 0 && eggIndex <= 5) {
-        var sliderValue = Math.round((eggIndex / 5) * 100);
-        slider.value = sliderValue;
-        updateHallabongFace(sliderValue);
-
-        setTimeout(function () {
-          selectEgg(eggIndex);
-        }, 300);
+        selectedEgg = eggIndex;
+        affirmationText.textContent = affirmations[eggIndex];
+        viewMain.classList.add("hidden");
+        viewAffirmation.classList.remove("hidden");
+        viewAffirmation.classList.add("entering");
+        return true;
       }
     }
+    return false;
   }
 
-  // --- initial positioning after layout ---
+  // --- init ---
   window.addEventListener("load", function () {
-    var value = parseInt(slider.value);
-    var eggIndex = sliderToEgg(value);
-    moveHallabong(eggIndex);
-    highlightEgg(eggIndex);
-    checkUrlParam();
-  });
-
-  window.addEventListener("resize", function () {
-    if (selectedEgg !== null) {
-      moveHallabong(selectedEgg);
-    } else {
-      var value = parseInt(slider.value);
-      moveHallabong(sliderToEgg(value));
+    var hasParam = checkUrlParam();
+    if (!hasParam) {
+      openCarton();
+      highlightEgg(sliderToEgg(50));
     }
   });
 })();

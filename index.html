@@ -4,57 +4,94 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>teleggram</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="app">
+  <!-- Main View -->
+  <main class="app view-main" id="view-main">
     <h1 class="title">send a teleggram!</h1>
 
-    <div class="carton-wrapper">
-      <div class="hallabong-track">
-        <img src="assets/characters/hallabong.png" alt="hallabong" class="hallabong" id="hallabong">
+    <div class="carton-wrapper" id="carton-wrapper">
+      <div class="carton-lid" id="carton-lid">
+        <div class="lid-clasp"></div>
+        <div class="lid-clasp"></div>
+        <div class="lid-clasp"></div>
       </div>
-
-      <div class="egg-carton" id="egg-carton">
-        <div class="egg-slot" data-egg="0">
-          <img src="assets/characters/gyelan.png" alt="egg" class="egg" id="egg-0">
-        </div>
-        <div class="egg-slot" data-egg="1">
-          <img src="assets/characters/gyelan.png" alt="egg" class="egg" id="egg-1">
-        </div>
-        <div class="egg-slot" data-egg="2">
-          <img src="assets/characters/gyelan.png" alt="egg" class="egg" id="egg-2">
-        </div>
-        <div class="egg-slot" data-egg="3">
-          <img src="assets/characters/gyelan.png" alt="egg" class="egg" id="egg-3">
-        </div>
-        <div class="egg-slot" data-egg="4">
-          <img src="assets/characters/gyelan.png" alt="egg" class="egg" id="egg-4">
-        </div>
-        <div class="egg-slot" data-egg="5">
-          <img src="assets/characters/gyelan.png" alt="egg" class="egg" id="egg-5">
+      <div class="carton-body">
+        <div class="egg-carton" id="egg-carton">
+          <div class="egg-slot" data-egg="0">
+            <div class="egg" id="egg-0">
+              <div class="egg-sparkle" id="sparkle-0"></div>
+            </div>
+          </div>
+          <div class="egg-slot" data-egg="1">
+            <div class="egg" id="egg-1">
+              <div class="egg-sparkle" id="sparkle-1"></div>
+            </div>
+          </div>
+          <div class="egg-slot" data-egg="2">
+            <div class="egg" id="egg-2">
+              <div class="egg-sparkle" id="sparkle-2"></div>
+            </div>
+          </div>
+          <div class="egg-slot" data-egg="3">
+            <div class="egg" id="egg-3">
+              <div class="egg-sparkle" id="sparkle-3"></div>
+            </div>
+          </div>
+          <div class="egg-slot" data-egg="4">
+            <div class="egg" id="egg-4">
+              <div class="egg-sparkle" id="sparkle-4"></div>
+            </div>
+          </div>
+          <div class="egg-slot" data-egg="5">
+            <div class="egg" id="egg-5">
+              <div class="egg-sparkle" id="sparkle-5"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+    <p class="slider-prompt">how do you want them to feel?</p>
 
     <div class="slider-area">
-      <span class="slider-label slider-label--left">playful</span>
-      <input type="range" min="0" max="100" value="50" class="mood-slider" id="mood-slider">
-      <span class="slider-label slider-label--right">warm</span>
+      <div class="slider-end slider-end--left">
+        <img src="assets/characters/hallabong-blush.png" alt="loved" class="slider-hallabong" id="hallabong-left">
+        <span class="slider-end-label">(loved)</span>
+      </div>
+
+      <div class="slider-track-wrapper">
+        <div class="slider-label-center">(in between)</div>
+        <input type="range" min="0" max="100" value="50" class="mood-slider" id="mood-slider">
+      </div>
+
+      <div class="slider-end slider-end--right">
+        <img src="assets/characters/hallabong-laugh.png" alt="laughs" class="slider-hallabong" id="hallabong-right">
+        <span class="slider-end-label">(laughs)</span>
+      </div>
     </div>
 
-    <div class="affirmation-area" id="affirmation-area">
+    <div class="counter" id="counter">
+      <span class="counter-icon">✉</span> 12 teleggrams sent
+    </div>
+  </main>
+
+  <!-- Affirmation View -->
+  <div class="app view-affirmation hidden" id="view-affirmation">
+    <div class="affirmation-content">
+      <img src="assets/characters/gyelan.png" alt="gyelan" class="affirmation-gyelan" id="affirmation-gyelan">
       <p class="affirmation-text" id="affirmation-text"></p>
     </div>
 
-    <button class="share-btn" id="share-btn">share this love letter</button>
+    <button class="copy-url-btn" id="copy-url-btn">COPY URL</button>
+    <p class="pick-another" id="pick-another">...or pick another!</p>
     <div class="toast" id="toast">copied!</div>
-
-    <div class="counter" id="counter">0 love letters sent</div>
-  </main>
+  </div>
 
   <script src="app.js"></script>
 </body>
